@@ -2,47 +2,48 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-class User extends Authenticatable
+class Berita extends Model
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    protected $table = 'berita';
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'judul',
+        'slug',
+        'konten',
+        'gambar',
+        'user_id',
+        'status',
+        'tanggal_publish'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+    protected $casts = [
+        'tanggal_publish' => 'datetime',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    // Relasi ke User
+    public function user()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(User::class);
+    }
+
+    // Auto generate slug dari judul
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($berita) {
+            if (empty($berita->slug)) {
+                $berita->slug = Str::slug($berita->judul);
+            }
+            if (empty($berita->tanggal_publish)) {
+                $berita->tanggal_publish = now();
+            }
+        });
     }
 }
