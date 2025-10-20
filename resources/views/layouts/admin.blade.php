@@ -30,7 +30,7 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li>
-                                <a class="dropdown-item" href="{{ url('/') }}" target="_blank">
+                                <a class="dropdown-item" href="{{ url('/') }}">
                                     <i class="bi bi-globe"></i> Lihat Website
                                 </a>
                             </li>
